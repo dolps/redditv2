@@ -27,8 +27,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="backend" target="1.5" />
-      <module name="frontend" target="1.5" />
+      <module name="backend" target="1.8" />
+      <module name="frontend" target="1.8" />
       <module name="redditV2" target="1.5" />
     </bytecodeTargetLevel>
   </component>
