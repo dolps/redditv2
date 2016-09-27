@@ -22,7 +22,7 @@ public class UserContributionService {
     private UserService userService;
 
     public Post placePost(Long userId, Post post) {
-        User user = entityManager.find(User.class, userId);
+        User user = userService.findById(userId);
 
         if (user != null) {
             post.setUser(user);
@@ -35,7 +35,7 @@ public class UserContributionService {
 
     @SuppressWarnings(value = "unchecked")
     public List<Post> getPostsByUser(Long id) {
-        return entityManager.createQuery("select user.posts from User user where user.id=:userId")
+        return entityManager.createNamedQuery(User.FIND_POSTS)
                 .setParameter("userId", id)
                 .getResultList();
     }

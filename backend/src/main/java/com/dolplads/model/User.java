@@ -21,7 +21,8 @@ import java.util.List;
         @NamedQuery(name = User.DISTINCT_COUNTRIES, query = "select user.address.country from User user"),
         @NamedQuery(name = User.NUMBER_OF_USERS, query = "select count(user) from User user"),
         @NamedQuery(name = User.NUMBER_OF_USERS_BY_COUNTRY,
-                query = "select count(user) from User user where user.address.country = :country")
+                query = "select count(user) from User user where user.address.country = :country"),
+        @NamedQuery(name = User.FIND_POSTS, query = "select user.posts from User user where user.id=:userId")
 })
 @Entity
 @NoArgsConstructor
@@ -32,6 +33,7 @@ public class User {
     public static final String NUMBER_OF_USERS = "user_number";
     public static final String NUMBER_OF_USERS_BY_COUNTRY = "user_number_by_country";
     public static final String MOST_ACTIVE = "most_active_by_posts_comments";
+    public static final String FIND_POSTS = "user_posts";
     @Id
     @GeneratedValue
     private Long id;
