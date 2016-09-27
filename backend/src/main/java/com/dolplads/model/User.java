@@ -51,7 +51,7 @@ public class User {
 
     @Embedded
     private Address address;
-
+    // ..
     public User(@NotNull String userName, @NotNull String email, @NotNull String password, Date dateOfBirth, Address address) {
         setUserName(userName);
         setEmail(email);
