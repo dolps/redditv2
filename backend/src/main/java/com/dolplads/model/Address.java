@@ -1,5 +1,6 @@
 package com.dolplads.model;
 
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
  */
 @Embeddable
 @NoArgsConstructor
+@Data
 public class Address {
     @Size(max = 100)
     private String streetName;
