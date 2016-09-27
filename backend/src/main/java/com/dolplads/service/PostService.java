@@ -5,6 +5,7 @@ import com.dolplads.repository.CrudRepository;
 import lombok.extern.java.Log;
 
 import javax.ejb.Stateless;
+import java.util.List;
 
 /**
  * Created by dolplads on 27/09/16.
@@ -14,5 +15,11 @@ import javax.ejb.Stateless;
 public class PostService extends CrudRepository<Post> {
     public PostService() {
         super(Post.class);
+    }
+
+    public List<Post> findByUser(Long userId) {
+        return entityManager.createNamedQuery(Post.FIND_BY_USER)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }

@@ -9,20 +9,26 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by dolplads on 27/09/16.
  */
+@NamedQueries(
+        @NamedQuery(name = Post.FIND_BY_USER, query = "select post from Post post where post.user.id = :userId")
+)
 @Entity
 @NoArgsConstructor
 @Data
 @ToString
 public class Post {
+    public static final String FIND_BY_USER = "find_by_user";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
+    @JoinColumn
     @NotNull
     private User user;
 
@@ -33,7 +39,7 @@ public class Post {
 
     private int downvotes;
 
-    @Past
+    //@Past cannot be in the past.. my computer == to fast
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -42,8 +48,16 @@ public class Post {
         createdAt = new Date();
     }
 
-    public Post(User user, String text) {
-        this.user = user;
-        this.text = text;
+    public Post(@NotNull User user, String text) {
+        setUser(user);
+        setText(text);
+    }
+
+    public void setUser(User user) {
+        if (user.getId() != null) {
+            this.user = user;
+        } else {
+            throw new IllegalArgumentException("User must be persisted");
+        }
     }
 }

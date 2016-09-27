@@ -54,7 +54,7 @@ public class UserServiceTest<T> extends ArquillianTest {
         int size = userService.findAll().size();
 
         User user = getValidUser();
-        userService.save(user);
+        user = userService.save(user);
 
         assertNotNull(user.getId());
         assertEquals(size + 1, userService.findAll().size());
@@ -63,11 +63,11 @@ public class UserServiceTest<T> extends ArquillianTest {
     @Test
     public void findById() throws Exception {
         User user = getValidUser();
-        userService.save(user);
-        assertTrue(user.getId() != null);
+        user = userService.save(user);
 
-        assertTrue(userService.findById(user.getId()) != null);
-        assertTrue(userService.findById(100L) == null);
+        assertNotNull(user.getId());
+        assertNotNull(userService.findById(user.getId()));
+        assertNull(userService.findById(100L));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class UserServiceTest<T> extends ArquillianTest {
         int size = userService.findAll().size();
 
         User user = getValidUser();
-        userService.save(user);
+        user = userService.save(user);
 
         assertNotNull(user.getId());
         assertEquals(size + 1, userService.findAll().size());
@@ -88,17 +88,17 @@ public class UserServiceTest<T> extends ArquillianTest {
 
     @Test
     public void update() throws Exception {
-        User testUser = getValidUser();
-        User persisted = userService.save(testUser);
+        User user = getValidUser();
+        user = userService.save(user);
 
-        persisted = userService.findById(persisted.getId());
-        assertEquals("thomas", persisted.getUserName());
+        user = userService.findById(user.getId());
+        assertEquals("thomas", user.getUserName());
 
-        persisted.setUserName("newName");
-        persisted = userService.update(persisted);
+        user.setUserName("newName");
+        user = userService.update(user);
 
-        persisted = userService.findById(persisted.getId());
-        assertEquals("newName", persisted.getUserName());
+        user = userService.findById(user.getId());
+        assertEquals("newName", user.getUserName());
     }
 
     @Test
