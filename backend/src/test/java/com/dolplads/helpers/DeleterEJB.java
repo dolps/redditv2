@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.validation.constraints.NotNull;
 
 /*
+    Written by Andrea.
     Utility EJB to use ONLY in an Arquillian deployment to clean up the database.
     Note: you want this EJB under src/test/java, and NEVER under src/main/java.
     Plus, should really make sure that you are not running tests against a live,

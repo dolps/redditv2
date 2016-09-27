@@ -175,19 +175,21 @@ public class PostServiceTest extends ArquillianTest {
         assertEquals(2, posts.size());
     }
 
+    ////////////////////////////////
+    /////Private helper methods/////
+    ////////////////////////////////
+
     private User getValidUser() {
         Calendar calendar = new GregorianCalendar(1989, 7, 10);
         Address address = new Address("street", "city", "country");
-        User user = new User("thomas", "test@test.com", "password", calendar.getTime(), address);
-        return user;
+        return new User("thomas", "test@test.com", "password", calendar.getTime(), address);
     }
 
     private User getPersistedUser() {
         return userService.save(getValidUser());
     }
 
-    public Post getValidPost() {
-        Post post = new Post(getPersistedUser(), "four");
-        return post;
+    private Post getValidPost() {
+        return new Post(getPersistedUser(), "four");
     }
 }

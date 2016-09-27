@@ -66,6 +66,7 @@ public class UserContributionServiceTest extends ArquillianTest {
         assertEquals("check managed on both sides", size + 2, userContributionService.getPostsByUser(u.getId()).size());
     }
 
+    // TODO: 27/09/16  IS THIS REDUNDANT SINCE WE ARE TESTING REMOVAL IN POST SERVICE
     @Test
     public void removePost() throws Exception {
         int size = postService.findAll().size();
@@ -81,11 +82,12 @@ public class UserContributionServiceTest extends ArquillianTest {
         persistedPost = postService.findById(persistedPost.getId());
         postService.remove(persistedPost);
 
-        assertEquals("one post has been removed", size, postService.findAll().size());
+        assertEquals("post should have been removed", size, postService.findAll().size());
         assertEquals("check on both sides", 0, postService.findByUser(u.getId()).size());
         assertEquals("check that its been managed on both sides", 0, userContributionService.getPostsByUser(u.getId()).size());
     }
 
+    // TODO: 27/09/16  IS THIS REDUNDANT SINCE WE ARE TESTING REMOVAL IN COMMENT SERVICE
     @Test
     public void placeComment() throws Exception {
         int size = commentService.findAll().size();
@@ -100,12 +102,32 @@ public class UserContributionServiceTest extends ArquillianTest {
         assertEquals("size should increment", size + 2, commentService.findAll().size());
     }
 
+    @Test
+    public void removeComment() throws Exception {
+        int size = commentService.findAll().size();
+
+        User persistedUser = getPersistedUser();
+        Post persistedPost = getPersistedPost();
+
+        Comment persistedComment =
+                userContributionService.placeComment(persistedUser.getId(), persistedPost.getId(), getValidComment());
+
+        assertEquals(size + 1, commentService.findAll().size());
+
+        persistedComment = commentService.findById(persistedComment.getId());
+        commentService.remove(persistedComment);
+
+        assertEquals("comment should have been removed", size, commentService.findAll().size());
+    }
+
+    ////////////////////////////////
+    /////Private helper methods/////
+    ////////////////////////////////
 
     private User getValidUser() {
         Calendar calendar = new GregorianCalendar(1989, 7, 10);
         Address address = new Address("street", "city", "country");
-        User user = new User("thomas", "test@test.com", "password", calendar.getTime(), address);
-        return user;
+        return new User("thomas", "test@test.com", "password", calendar.getTime(), address);
     }
 
     private User getPersistedUser() {
@@ -117,12 +139,11 @@ public class UserContributionServiceTest extends ArquillianTest {
         return postService.save(post);
     }
 
-    public Post getValidPost() {
-        Post post = new Post(null, "four");
-        return post;
+    private Post getValidPost() {
+        return new Post(null, "four");
     }
 
-    public Comment getValidComment() {
+    private Comment getValidComment() {
         return new Comment(getValidUser(), getValidPost(), "four");
     }
 

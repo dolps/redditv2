@@ -129,6 +129,10 @@ public class UserServiceTest<T> extends ArquillianTest {
         assertEquals(2, users.size());
     }
 
+    ////////////////////////////////
+    /////Private helper methods/////
+    ////////////////////////////////
+
     private User getValidUser() {
         Calendar calendar = new GregorianCalendar(1989, 7, 10);
         Address address = new Address("street", "city", "country");
