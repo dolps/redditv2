@@ -17,6 +17,7 @@ public class PostService extends CrudRepository<Post> {
         super(Post.class);
     }
 
+    @SuppressWarnings(value = "unchecked")
     public List<Post> findByUser(Long userId) {
         return entityManager.createNamedQuery(Post.FIND_BY_USER)
                 .setParameter("userId", userId)

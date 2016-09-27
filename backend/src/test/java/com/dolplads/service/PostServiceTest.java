@@ -49,11 +49,17 @@ public class PostServiceTest extends ArquillianTest {
         assertEquals("should be ready for persist", 0, validator.validate(post).size());
     }
 
+    /**
+     * Note that even though passing a valid user,
+     * the user must have been persisted to be valid for the post
+     *
+     * @throws Exception
+     */
     @Test
     public void createNonValidPost() throws Exception {
-        Post post = new Post(getPersistedUser(), "tre");
+        Post post = new Post(getValidUser(), "tre");
 
-        assertEquals("not ready for persist", 1, validator.validate(post).size());
+        assertEquals("not ready for persist", 2, validator.validate(post).size());
     }
 
     @Test
@@ -148,12 +154,6 @@ public class PostServiceTest extends ArquillianTest {
 
         List<Post> posts = postService.findByUser(post1.getUser().getId());
         assertEquals(2, posts.size());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void verifyThatUserMustBePersisted() throws Exception {
-        Post post = getValidPost();
-        post.setUser(getValidUser());
     }
 
     private User getValidUser() {

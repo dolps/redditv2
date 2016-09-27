@@ -1,5 +1,6 @@
 package com.dolplads.model;
 
+import com.dolplads.annotations.Persisted;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -29,7 +30,8 @@ public class Post {
 
     @ManyToOne
     @JoinColumn
-    @NotNull
+
+    @Persisted
     private User user;
 
     @Size(min = 4, max = 255)
@@ -54,10 +56,6 @@ public class Post {
     }
 
     public void setUser(User user) {
-        if (user.getId() != null) {
-            this.user = user;
-        } else {
-            throw new IllegalArgumentException("User must be persisted");
-        }
+        this.user = user;
     }
 }
