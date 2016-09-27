@@ -35,7 +35,7 @@ public class User {
     public static final String MOST_ACTIVE = "most_active_by_posts_comments";
     public static final String FIND_POSTS = "user_posts";
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
