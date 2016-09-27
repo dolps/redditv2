@@ -5,11 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by dolplads on 26/09/16.
@@ -49,8 +52,12 @@ public class User {
     @Past
     private Date dateOfBirth;
 
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
+
     @Embedded
     private Address address;
+
     // ..
     public User(@NotNull String userName, @NotNull String email, @NotNull String password, Date dateOfBirth, Address address) {
         setUserName(userName);
@@ -58,5 +65,17 @@ public class User {
         setPassword(password);
         setDateOfBirth(dateOfBirth);
         setAddress(address);
+    }
+
+    @PostConstruct
+    public void init() {
+        posts = new ArrayList<>();
+    }
+
+    public void addPost(Post post) {
+        post.setUser(this);
+        if (!posts.contains(post)) {
+            posts.add(post);
+        }
     }
 }

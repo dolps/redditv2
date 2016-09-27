@@ -32,7 +32,7 @@ public abstract class CrudRepository<T> {
     }
 
     public void remove(@NotNull T entity) {
-        entityManager.remove(update(entity));
+        entityManager.remove(update(entity)); // to avoid issue with detached objects
     }
 
     public T update(@NotNull T entity) {

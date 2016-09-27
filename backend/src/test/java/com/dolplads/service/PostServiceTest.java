@@ -6,7 +6,6 @@ import com.dolplads.model.Address;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
 import lombok.extern.java.Log;
-import org.hibernate.TransientPropertyValueException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +25,7 @@ import static org.junit.Assert.*;
  */
 @Log
 public class PostServiceTest extends ArquillianTest {
+
     @EJB
     private DeleterEJB deleterEJB;
     @EJB

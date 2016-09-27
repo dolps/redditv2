@@ -1,6 +1,7 @@
 package com.dolplads.service;
 
 import com.dolplads.model.Post;
+import com.dolplads.model.User;
 import com.dolplads.repository.CrudRepository;
 import lombok.extern.java.Log;
 
