@@ -5,9 +5,6 @@ import com.dolplads.helpers.DeleterEJB;
 import com.dolplads.model.Address;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
-import com.dolplads.service.PostService;
-import com.dolplads.service.UserContributionService;
-import com.dolplads.service.UserService;
 import lombok.extern.java.Log;
 import org.junit.After;
 import org.junit.Before;
@@ -52,15 +49,17 @@ public class UserContributionServiceTest extends ArquillianTest {
         Post p1 = getValidPost();
         Post p2 = getValidPost();
 
+        p1.setUser(u);
+        p2.setUser(u);
         int size = postService.findAll().size();
 
-        Post persisted1 = userContributionService.createWithUser(u.getId(), p1);
-        Post persisted2 = userContributionService.createWithUser(u.getId(), p2);
+        userContributionService.placePost(u.getId(), p1);
+        userContributionService.placePost(u.getId(), p2);
 
-        assertEquals(size + 2, postService.findAll().size());
+        assertEquals("check managed on both sides", size + 2, postService.findAll().size());
+        assertEquals("check managed on both sides", size + 2, userContributionService.getPostsByUser(u.getId()).size());
     }
 
-    // TODO: 27/09/16 REFACTORING NEEDED!
     @Test
     public void removePost() throws Exception {
         int size = postService.findAll().size();
@@ -68,18 +67,17 @@ public class UserContributionServiceTest extends ArquillianTest {
         User u = getPersistedUser();
         Post p1 = getValidPost();
         p1.setUser(u);
-        Post p2 = getValidPost();
-        p2.setUser(u);
 
-        Post persistedPost = userContributionService.createWithUser(u.getId(), p1);
-        userContributionService.createWithUser(u.getId(), p2);
-        assertEquals(size + 2, postService.findAll().size());
+        Post persistedPost = userContributionService.placePost(u.getId(), p1);
 
+        assertEquals(size + 1, postService.findAll().size());
+
+        persistedPost = postService.findById(persistedPost.getId());
         postService.remove(persistedPost);
 
-        assertEquals("one post has been removed", size + 1, postService.findAll().size());
-        assertEquals("check on both sides", 1, postService.findByUser(u.getId()).size());
-        assertEquals("check that its been managed on both sides", 1, userContributionService.getPostsByUser(u.getId()).size());
+        assertEquals("one post has been removed", size, postService.findAll().size());
+        assertEquals("check on both sides", 0, postService.findByUser(u.getId()).size());
+        assertEquals("check that its been managed on both sides", 0, userContributionService.getPostsByUser(u.getId()).size());
     }
 
     private User getValidUser() {
@@ -94,7 +92,7 @@ public class UserContributionServiceTest extends ArquillianTest {
     }
 
     public Post getValidPost() {
-        Post post = new Post(getPersistedUser(), "four");
+        Post post = new Post(null, "four");
         return post;
     }
 

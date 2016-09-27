@@ -21,19 +21,16 @@ public class UserContributionService {
     @EJB
     private UserService userService;
 
-    public Post createWithUser(Long userId, Post post) {
+    public Post placePost(Long userId, Post post) {
         User user = entityManager.find(User.class, userId);
 
         if (user != null) {
             post.setUser(user);
             user.addPost(post);
+            return postService.save(post);
         }
-        return postService.save(post);
-    }
 
-    // TODO: 27/09/16 update this !!!!
-    public void remove(Post post) {
-        postService.remove(post);
+        return null;
     }
 
     @SuppressWarnings(value = "unchecked")
