@@ -49,9 +49,10 @@ public class PostServiceTest extends ArquillianTest {
         assertEquals("should be ready for persist", 0, validator.validate(post).size());
     }
 
+
     /**
      * Note that even though passing a valid user,
-     * the user must have been persisted to be valid for the post
+     * the user must bee persisted first to make the post persist to DB
      *
      * @throws Exception
      */

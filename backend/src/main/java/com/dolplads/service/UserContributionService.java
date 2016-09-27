@@ -36,6 +36,7 @@ public class UserContributionService {
         return null;
     }
 
+    // TODO: 27/09/16 Move this into the statistics bean
     @SuppressWarnings(value = "unchecked")
     public List<Post> getPostsByUser(Long id) {
         /*
@@ -44,6 +45,11 @@ public class UserContributionService {
                 .getResultList();
                 */
         return postService.findByUser(id);
+    }
+
+    // // TODO: 27/09/16 move this into the statistics bean
+    public List<Comment> getCommentsByUser(Long id) {
+        return commentService.findByUser(id);
     }
 
     public Comment placeComment(Long userId, Long postId, Comment comment) {

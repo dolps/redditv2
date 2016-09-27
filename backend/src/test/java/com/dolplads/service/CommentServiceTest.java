@@ -55,7 +55,7 @@ public class CommentServiceTest extends ArquillianTest {
 
     /**
      * Note that even though passing a valid user,
-     * the user must have been persisted to be valid for the post
+     * the user must bee persisted first to make the comment persist to DB
      *
      * @throws Exception
      */

@@ -22,7 +22,8 @@ import java.util.List;
         @NamedQuery(name = User.NUMBER_OF_USERS, query = "select count(user) from User user"),
         @NamedQuery(name = User.NUMBER_OF_USERS_BY_COUNTRY,
                 query = "select count(user) from User user where user.address.country = :country"),
-        @NamedQuery(name = User.FIND_POSTS, query = "select user.posts from User user where user.id=:userId")
+        @NamedQuery(name = User.FIND_POSTS, query = "select user.posts from User user where user.id=:userId"),
+        @NamedQuery(name = User.MOST_ACTIVE, query = "select u from User u order by size(u.posts) + size(u.comments) DESC")
 })
 @Entity
 @NoArgsConstructor
@@ -55,12 +56,14 @@ public class User {
     private Date dateOfBirth;
 
     @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
 
     @Embedded
     private Address address;
 
-    // ..
     public User(@NotNull String userName, @NotNull String email, @NotNull String password, Date dateOfBirth, Address address) {
         setUserName(userName);
         setEmail(email);
@@ -72,6 +75,7 @@ public class User {
     @PostConstruct
     public void init() {
         posts = new ArrayList<>();
+        comments = new ArrayList<>();
     }
 
     public void addPost(Post post) {
