@@ -4,16 +4,19 @@ import com.dolplads.model.Post;
 import com.dolplads.model.User;
 
 import javax.ejb.Singleton;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Math.toIntExact;
+
 /**
  * Created by dolplads on 27/09/16.
  */
 // TODO: 27/09/16 FINISH THIS
-@Singleton
+@Stateless
 @SuppressWarnings(value = "unchecked")
 public class StatisticsService {
     @PersistenceContext
@@ -30,24 +33,31 @@ public class StatisticsService {
     }
 
     public int numberOfPosts() {
-        return entityManager.createNamedQuery(Post.TOTAL_NUMBER).getFirstResult();
+        Long res = (Long) entityManager.createNamedQuery(Post.TOTAL_NUMBER).getSingleResult();
+
+        return toIntExact(res);
     }
 
     public int numberOfPostsByCountry(String country) {
-        return entityManager
+        Long res = (Long) entityManager
                 .createNamedQuery(Post.TOTAL_NUMBER_BY_COUNTRY)
                 .setParameter("country", country)
-                .getFirstResult();
+                .getSingleResult();
+
+        return toIntExact(res);
     }
 
     public int numberOfUsers() {
-        return entityManager.createNamedQuery(User.NUMBER_OF_USERS).getFirstResult();
+        Long res = (Long) entityManager.createNamedQuery(User.NUMBER_OF_USERS).getSingleResult();
+        return toIntExact(res);
     }
 
     public int numberOfUsersByCountry(String country) {
-        return entityManager
+        Long res = (Long) entityManager
                 .createNamedQuery(User.NUMBER_OF_USERS_BY_COUNTRY)
-                .setParameter("country", country).getFirstResult();
+                .setParameter("country", country).getSingleResult();
+
+        return toIntExact(res);
     }
 
     public List<User> mostActiveUsers(int max) {

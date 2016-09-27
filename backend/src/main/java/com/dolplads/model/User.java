@@ -18,7 +18,7 @@ import java.util.List;
  * Created by dolplads on 26/09/16.
  */
 @NamedQueries({
-        @NamedQuery(name = User.DISTINCT_COUNTRIES, query = "select user.address.country from User user"),
+        @NamedQuery(name = User.DISTINCT_COUNTRIES, query = "select distinct (user.address.country) from User user"),
         @NamedQuery(name = User.NUMBER_OF_USERS, query = "select count(user) from User user"),
         @NamedQuery(name = User.NUMBER_OF_USERS_BY_COUNTRY,
                 query = "select count(user) from User user where user.address.country = :country"),
