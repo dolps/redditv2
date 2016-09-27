@@ -12,11 +12,12 @@ import java.util.List;
 
 /**
  * Created by dolplads on 27/09/16.
+ * <p>
+ * Handles activites performed by users of the page
+ * like placing a comment or a post
  */
 @Stateless
 public class UserContributionService {
-    //@PersistenceContext
-    //private EntityManager entityManager;
     @EJB
     private PostService postService;
     @EJB
@@ -29,27 +30,10 @@ public class UserContributionService {
 
         if (user != null) {
             post.setUser(user);
-            user.addPost(post);
             return postService.save(post);
         }
 
         return null;
-    }
-
-    // TODO: 27/09/16 Move this into the statistics bean
-    @SuppressWarnings(value = "unchecked")
-    public List<Post> getPostsByUser(Long id) {
-        /*
-        return entityManager.createNamedQuery(User.FIND_POSTS)
-                .setParameter("userId", id)
-                .getResultList();
-                */
-        return postService.findByUser(id);
-    }
-
-    // // TODO: 27/09/16 move this into the statistics bean
-    public List<Comment> getCommentsByUser(Long id) {
-        return commentService.findByUser(id);
     }
 
     public Comment placeComment(Long userId, Long postId, Comment comment) {

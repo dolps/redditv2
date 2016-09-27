@@ -88,8 +88,14 @@ public class StatisticsServiceTest extends ArquillianTest {
     @Test
     public void mostActiveUsers() throws Exception {
         List<User> orderedByActiveness = statisticsService.mostActiveUsers(2);
-        assertEquals("most active should be: ", "mostActive", orderedByActiveness.get(0).getUserName());
+        User mostActive = orderedByActiveness.get(0);
+
+        assertEquals("most active should be: ", "mostActive", mostActive.getUserName());
         assertTrue(orderedByActiveness.size() == 2);
+        int numberOfPosts = statisticsService.getNumberOfPostsByUser(mostActive.getId());
+        int numberOfComments = statisticsService.getNumberOfCommentsByUser(mostActive.getId());
+        assertEquals(4,numberOfPosts);
+        assertEquals(1,numberOfComments);
     }
 
 

@@ -22,12 +22,12 @@ public abstract class CrudRepository<T> {
         this.entityClass = entityClass;
     }
 
-    public T save(@NotNull T entity) {
+    public T save(T entity) {
         entityManager.persist(entity);
         return entity;
     }
 
-    public T findById(@NotNull Long id) {
+    public T findById(Long id) {
         return entityManager.find(entityClass, id);
     }
 
@@ -35,7 +35,7 @@ public abstract class CrudRepository<T> {
         entityManager.remove(update(entity)); // to avoid issue with detached objects
     }
 
-    public T update(@NotNull T entity) {
+    public T update(T entity) {
         return entityManager.merge(entity);
     }
 
@@ -43,7 +43,7 @@ public abstract class CrudRepository<T> {
         return queryForAll().getResultList();
     }
 
-    public List<T> findAllPaginated(@NotNull Integer start, @NotNull Integer nOfElements) {
+    public List<T> findAllPaginated(Integer start, Integer nOfElements) {
         TypedQuery<T> query = queryForAll();
 
         query.setFirstResult(start);

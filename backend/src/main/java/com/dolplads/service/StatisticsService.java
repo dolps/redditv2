@@ -3,12 +3,10 @@ package com.dolplads.service;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
 
-import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Set;
 
 import static java.lang.Math.toIntExact;
 
@@ -67,4 +65,16 @@ public class StatisticsService {
                 .getResultList();
     }
 
+    public int getNumberOfCommentsByUser(Long userId) {
+        return (Integer) entityManager.createNamedQuery(User.NUMBER_OF_COMMENTS_BY_USER)
+                .setParameter("userId", userId)
+                .getSingleResult();
+
+    }
+
+    public int getNumberOfPostsByUser(Long userId) {
+        return (Integer) entityManager.createNamedQuery(User.NUMBER_OF_POSTS_BY_USER)
+                .setParameter("userId", userId)
+                .getSingleResult();
+    }
 }

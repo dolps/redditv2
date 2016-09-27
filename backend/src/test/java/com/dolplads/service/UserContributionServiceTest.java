@@ -61,9 +61,7 @@ public class UserContributionServiceTest extends ArquillianTest {
         userContributionService.placePost(u.getId(), p1);
         userContributionService.placePost(u.getId(), p2);
 
-        assertEquals("check managed on both sides", size + 2, postService.findAll().size());
-        // // TODO: 27/09/16 should remove this swapping implementation
-        assertEquals("check managed on both sides", size + 2, userContributionService.getPostsByUser(u.getId()).size());
+        assertEquals(size + 2, postService.findAll().size());
     }
 
     // TODO: 27/09/16  IS THIS REDUNDANT SINCE WE ARE TESTING REMOVAL IN POST SERVICE
@@ -84,7 +82,6 @@ public class UserContributionServiceTest extends ArquillianTest {
 
         assertEquals("post should have been removed", size, postService.findAll().size());
         assertEquals("check on both sides", 0, postService.findByUser(u.getId()).size());
-        assertEquals("check that its been managed on both sides", 0, userContributionService.getPostsByUser(u.getId()).size());
     }
 
     // TODO: 27/09/16  IS THIS REDUNDANT SINCE WE ARE TESTING REMOVAL IN COMMENT SERVICE
