@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 public class UserService extends CrudRepository<User> {
 
     public UserService() {
+
         super(User.class);
     }
 }

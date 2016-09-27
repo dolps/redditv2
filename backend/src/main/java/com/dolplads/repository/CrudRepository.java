@@ -18,7 +18,6 @@ public abstract class CrudRepository<T> {
     protected EntityManager entityManager;
     private Class<T> entityClass;
 
-
     public CrudRepository(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
@@ -33,10 +32,10 @@ public abstract class CrudRepository<T> {
     }
 
     public void remove(@NotNull T entity) {
-        entityManager.remove(merge(entity));
+        entityManager.remove(update(entity));
     }
 
-    public T merge(@NotNull T entity) {
+    public T update(@NotNull T entity) {
         return entityManager.merge(entity);
     }
 
