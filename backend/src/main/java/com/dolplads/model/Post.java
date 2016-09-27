@@ -1,7 +1,7 @@
 package com.dolplads.model;
 
-import com.dolplads.annotations.Persisted;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -21,41 +21,13 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @Data
-@ToString
-public class Post {
-    public static final String FIND_BY_USER = "find_by_user";
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class Post extends UserContribution {
+    public static final String FIND_BY_USER = "post_by_user";
 
-    @ManyToOne
-    @JoinColumn
-
-    @Persisted
-    private User user;
-
-    @Size(min = 4, max = 255)
-    private String text;
-
-    private int upVotes;
-
-    private int downvotes;
-
-    //@Past cannot be in the past.. my computer == to fast
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
-
-    @PrePersist
-    private void onPersist() {
-        createdAt = new Date();
-    }
-
-    public Post(@NotNull User user, String text) {
+    public Post(@NotNull User user, @NotNull String text) {
         setUser(user);
         setText(text);
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

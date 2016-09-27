@@ -59,7 +59,7 @@ public class PostServiceTest extends ArquillianTest {
     public void createNonValidPost() throws Exception {
         Post post = new Post(getValidUser(), "tre");
 
-        assertEquals("not ready for persist", 2, validator.validate(post).size());
+        assertEquals("not ready for persist", 1, validator.validate(post).size());
     }
 
     @Test
@@ -67,7 +67,6 @@ public class PostServiceTest extends ArquillianTest {
         int size = postService.findAll().size();
 
         Post post = getValidPost();
-
         post = postService.save(post);
 
         assertNotNull(post.getId());
@@ -87,6 +86,7 @@ public class PostServiceTest extends ArquillianTest {
     @Test
     public void remove() throws Exception {
         int size = postService.findAll().size();
+
         Post post = getValidPost();
         post = postService.save(post);
 
@@ -112,6 +112,25 @@ public class PostServiceTest extends ArquillianTest {
 
         post = postService.findById(post.getId());
         assertEquals("updated", post.getText());
+    }
+
+    /**
+     * Not really necessary but wanted to be sure
+     *
+     * @throws Exception
+     */
+    @Test
+    public void updateUserReflectsInPost() throws Exception {
+        Post post = getValidPost();
+        post = postService.save(post);
+
+        post = postService.findById(post.getId());
+        User u = post.getUser();
+        u.setUserName("newUserName");
+        u = userService.update(u);
+
+        post = postService.findById(post.getId());
+        assertEquals("newUserName", post.getUser().getUserName());
     }
 
     @Test
@@ -148,11 +167,11 @@ public class PostServiceTest extends ArquillianTest {
         Post post2 = getValidPost();
 
         post1.setUser(user);
-        post1 = postService.save(post1);
         post2.setUser(user);
+        postService.save(post1);
         postService.save(post2);
 
-        List<Post> posts = postService.findByUser(post1.getUser().getId());
+        List<Post> posts = postService.findByUser(user.getId());
         assertEquals(2, posts.size());
     }
 

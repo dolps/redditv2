@@ -14,11 +14,21 @@ import java.util.Date;
 /**
  * Created by dolplads on 26/09/16.
  */
+@NamedQueries({
+        @NamedQuery(name = User.DISTINCT_COUNTRIES, query = "select user.address.country from User user"),
+        @NamedQuery(name = User.NUMBER_OF_USERS, query = "select count(user) from User user"),
+        @NamedQuery(name = User.NUMBER_OF_USERS_BY_COUNTRY,
+                query = "select count(user) from User user where user.address.country = :country")
+})
 @Entity
 @NoArgsConstructor
 @Data
 @ToString
 public class User {
+    public static final String DISTINCT_COUNTRIES = "user_distinct_countries";
+    public static final String NUMBER_OF_USERS = "user_number";
+    public static final String NUMBER_OF_USERS_BY_COUNTRY = "user_number_by_country";
+    public static final String MOST_ACTIVE = "most_active_by_posts_comments";
     @Id
     @GeneratedValue
     private Long id;
@@ -42,7 +52,7 @@ public class User {
     @Embedded
     private Address address;
 
-    public User(String userName, String email, String password, Date dateOfBirth, Address address) {
+    public User(@NotNull String userName, @NotNull String email, @NotNull String password, Date dateOfBirth, Address address) {
         setUserName(userName);
         setEmail(email);
         setPassword(password);
