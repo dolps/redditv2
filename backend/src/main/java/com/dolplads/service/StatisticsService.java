@@ -3,6 +3,7 @@ package com.dolplads.service;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
 
+import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,7 +14,6 @@ import static java.lang.Math.toIntExact;
 /**
  * Created by dolplads on 27/09/16.
  */
-// TODO: 27/09/16 FINISH THIS
 @Stateless
 @SuppressWarnings(value = "unchecked")
 public class StatisticsService {
