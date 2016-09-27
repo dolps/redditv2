@@ -12,7 +12,6 @@ import java.util.List;
  * Created by dolplads on 27/09/16.
  */
 @Stateless
-@Log
 public class PostService extends CrudRepository<Post> {
     public PostService() {
         super(Post.class);

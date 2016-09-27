@@ -3,6 +3,7 @@ package com.dolplads.service;
 import com.dolplads.helpers.ArquillianTest;
 import com.dolplads.helpers.DeleterEJB;
 import com.dolplads.model.Address;
+import com.dolplads.model.Comment;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
 import lombok.extern.java.Log;
@@ -33,13 +34,17 @@ public class UserContributionServiceTest extends ArquillianTest {
     @EJB
     private UserService userService;
     @EJB
+    private CommentService commentService;
+    @EJB
     private UserContributionService userContributionService;
 
     @Before
     @After
     public void restoreDB() throws Exception {
         log.log(Level.INFO, "restoring DB");
+        deleterEJB.deleteEntities(Comment.class);
         deleterEJB.deleteEntities(Post.class);
+        deleterEJB.deleteEntities(User.class);
     }
 
 
@@ -57,6 +62,7 @@ public class UserContributionServiceTest extends ArquillianTest {
         userContributionService.placePost(u.getId(), p2);
 
         assertEquals("check managed on both sides", size + 2, postService.findAll().size());
+        // // TODO: 27/09/16 should remove this swapping implementation
         assertEquals("check managed on both sides", size + 2, userContributionService.getPostsByUser(u.getId()).size());
     }
 
@@ -80,6 +86,21 @@ public class UserContributionServiceTest extends ArquillianTest {
         assertEquals("check that its been managed on both sides", 0, userContributionService.getPostsByUser(u.getId()).size());
     }
 
+    @Test
+    public void placeComment() throws Exception {
+        int size = commentService.findAll().size();
+
+        User persistedUser = getPersistedUser();
+        Post persistedPost = getPersistedPost();
+
+
+        userContributionService.placeComment(persistedUser.getId(), persistedPost.getId(), getValidComment());
+        userContributionService.placeComment(persistedUser.getId(), persistedPost.getId(), getValidComment());
+
+        assertEquals("size should increment", size + 2, commentService.findAll().size());
+    }
+
+
     private User getValidUser() {
         Calendar calendar = new GregorianCalendar(1989, 7, 10);
         Address address = new Address("street", "city", "country");
@@ -91,9 +112,18 @@ public class UserContributionServiceTest extends ArquillianTest {
         return userService.save(getValidUser());
     }
 
+    private Post getPersistedPost() {
+        Post post = new Post(getPersistedUser(), "text");
+        return postService.save(post);
+    }
+
     public Post getValidPost() {
         Post post = new Post(null, "four");
         return post;
+    }
+
+    public Comment getValidComment() {
+        return new Comment(getValidUser(), getValidPost(), "four");
     }
 
 }

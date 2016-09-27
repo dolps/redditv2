@@ -11,11 +11,9 @@ import javax.validation.constraints.NotNull;
  * Created by dolplads on 26/09/16.
  */
 @Stateless
-@Log
 public class UserService extends CrudRepository<User> {
 
     public UserService() {
-
         super(User.class);
     }
 }
