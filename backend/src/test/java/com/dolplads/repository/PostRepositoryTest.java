@@ -1,4 +1,4 @@
-package com.dolplads.service;
+package com.dolplads.repository;
 
 import com.dolplads.helpers.ArquillianTest;
 import com.dolplads.helpers.DeleterEJB;
