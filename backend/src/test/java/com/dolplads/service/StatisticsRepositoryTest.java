@@ -6,6 +6,9 @@ import com.dolplads.model.Address;
 import com.dolplads.model.Comment;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
+import com.dolplads.repository.CommentRepository;
+import com.dolplads.repository.PostRepository;
+import com.dolplads.repository.StatisticsRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,17 +24,17 @@ import static org.junit.Assert.*;
 /**
  * Created by dolplads on 27/09/16.
  */
-public class StatisticsServiceTest extends ArquillianTest {
+public class StatisticsRepositoryTest extends ArquillianTest {
     @EJB
     private DeleterEJB deleterEJB;
     @EJB
-    private StatisticsService statisticsService;
+    private StatisticsRepository statisticsRepository;
     @EJB
-    private UserService userService;
+    private com.dolplads.repository.UserRepository UserRepository;
     @EJB
-    private PostService postService;
+    private PostRepository postRepository;
     @EJB
-    private CommentService commentService;
+    private CommentRepository commentRepository;
 
     /**
      * Creating:
@@ -54,7 +57,7 @@ public class StatisticsServiceTest extends ArquillianTest {
 
     @Test
     public void distinctCountries() throws Exception {
-        List<String> countries = statisticsService.distinctCountries();
+        List<String> countries = statisticsRepository.distinctCountries();
 
         assertEquals(2, countries.size());
         assertTrue(countries.contains("Norway"));
@@ -63,37 +66,37 @@ public class StatisticsServiceTest extends ArquillianTest {
 
     @Test
     public void numberOfPosts() throws Exception {
-        assertEquals(6, statisticsService.numberOfPosts());
+        assertEquals(6, statisticsRepository.numberOfPosts());
     }
 
     @Test
     public void numberOfPostsByCountry() throws Exception {
-        assertEquals(2, statisticsService.numberOfPostsByCountry("Norway"));
-        assertEquals(4, statisticsService.numberOfPostsByCountry("Sweden"));
-        assertEquals(0, statisticsService.numberOfPostsByCountry("Denmark"));
+        assertEquals(2, statisticsRepository.numberOfPostsByCountry("Norway"));
+        assertEquals(4, statisticsRepository.numberOfPostsByCountry("Sweden"));
+        assertEquals(0, statisticsRepository.numberOfPostsByCountry("Denmark"));
     }
 
     @Test
     public void numberOfUsers() throws Exception {
-        assertEquals(3, statisticsService.numberOfUsers());
+        assertEquals(3, statisticsRepository.numberOfUsers());
     }
 
     @Test
     public void numberOfUsersByCountry() throws Exception {
-        assertEquals(2, statisticsService.numberOfUsersByCountry("Norway"));
-        assertEquals(1, statisticsService.numberOfUsersByCountry("Sweden"));
-        assertEquals(0, statisticsService.numberOfUsersByCountry("Denmark"));
+        assertEquals(2, statisticsRepository.numberOfUsersByCountry("Norway"));
+        assertEquals(1, statisticsRepository.numberOfUsersByCountry("Sweden"));
+        assertEquals(0, statisticsRepository.numberOfUsersByCountry("Denmark"));
     }
 
     @Test
     public void mostActiveUsers() throws Exception {
-        List<User> orderedByActiveness = statisticsService.mostActiveUsers(2);
+        List<User> orderedByActiveness = statisticsRepository.mostActiveUsers(2);
         User mostActive = orderedByActiveness.get(0);
 
         assertEquals("most active should be: ", "mostActive", mostActive.getUserName());
         assertTrue(orderedByActiveness.size() == 2);
-        int numberOfPosts = statisticsService.getNumberOfPostsByUser(mostActive.getId());
-        int numberOfComments = statisticsService.getNumberOfCommentsByUser(mostActive.getId());
+        int numberOfPosts = statisticsRepository.getNumberOfPostsByUser(mostActive.getId());
+        int numberOfComments = statisticsRepository.getNumberOfCommentsByUser(mostActive.getId());
         assertEquals(4,numberOfPosts);
         assertEquals(1,numberOfComments);
     }
@@ -125,7 +128,7 @@ public class StatisticsServiceTest extends ArquillianTest {
         User user3 = new User("mostActive", "dolplads@gmail.com", "password", calendar.getTime(), address3);
 
         persistUsers(user2, user1, user3);
-        assertEquals(3, userService.findAll().size());
+        assertEquals(3, UserRepository.findAll().size());
 
         Post post1 = new Post(user1, "post1");
         Post post2 = new Post(user1, "post2");
@@ -135,31 +138,31 @@ public class StatisticsServiceTest extends ArquillianTest {
         Post post6 = new Post(user3, "post3");
 
         persistPosts(post1, post2, post3, post4, post5, post6);// TODO: 27/09/16 FIX THIS
-        assertEquals(6, postService.findAll().size());
+        assertEquals(6, postRepository.findAll().size());
 
         Comment comment1 = new Comment(user1, post1, "comment1");
         Comment comment2 = new Comment(user2, post1, "comment1");
         Comment comment3 = new Comment(user3, post1, "comment1");
 
         persistComments(comment1, comment2, comment3);
-        assertEquals(3, commentService.findAll().size());
+        assertEquals(3, commentRepository.findAll().size());
     }
 
     private void persistComments(Comment... comments) {
         for (Comment comment : comments) {
-            commentService.save(comment);
+            commentRepository.save(comment);
         }
     }
 
     private void persistPosts(Post... posts) {
         for (Post post : posts) {
-            postService.save(post);
+            postRepository.save(post);
         }
     }
 
     private void persistUsers(User... users) {
         for (User user : users) {
-            userService.save(user);
+            UserRepository.save(user);
         }
     }
 

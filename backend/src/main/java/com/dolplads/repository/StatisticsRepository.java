@@ -1,4 +1,4 @@
-package com.dolplads.service;
+package com.dolplads.repository;
 
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
@@ -7,6 +7,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.security.MessageDigest;
 import java.util.List;
 
 import static java.lang.Math.toIntExact;
@@ -16,16 +17,10 @@ import static java.lang.Math.toIntExact;
  */
 @Stateless
 @SuppressWarnings(value = "unchecked")
-public class StatisticsService {
+public class StatisticsRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    // set of countries users are from
-    // number of posts in total
-    // number of posts from a spesific country
-    // number of users
-    // number of users from a spesific country
-    // top x users that wrote the most comments
     public List<String> distinctCountries() {
         return entityManager.createNamedQuery(User.DISTINCT_COUNTRIES).getResultList();
     }
@@ -47,6 +42,7 @@ public class StatisticsService {
 
     public int numberOfUsers() {
         Long res = (Long) entityManager.createNamedQuery(User.NUMBER_OF_USERS).getSingleResult();
+
         return toIntExact(res);
     }
 
@@ -69,7 +65,6 @@ public class StatisticsService {
         return (Integer) entityManager.createNamedQuery(User.NUMBER_OF_COMMENTS_BY_USER)
                 .setParameter("userId", userId)
                 .getSingleResult();
-
     }
 
     public int getNumberOfPostsByUser(Long userId) {

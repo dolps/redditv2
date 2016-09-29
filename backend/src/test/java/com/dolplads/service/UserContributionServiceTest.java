@@ -6,6 +6,8 @@ import com.dolplads.model.Address;
 import com.dolplads.model.Comment;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
+import com.dolplads.repository.CommentRepository;
+import com.dolplads.repository.PostRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
 import org.junit.Before;
@@ -30,11 +32,11 @@ public class UserContributionServiceTest extends ArquillianTest {
     @Inject
     private Validator validator;
     @EJB
-    private PostService postService;
+    private PostRepository postRepository;
     @EJB
-    private UserService userService;
+    private com.dolplads.repository.UserRepository UserRepository;
     @EJB
-    private CommentService commentService;
+    private CommentRepository commentRepository;
     @EJB
     private UserContributionService userContributionService;
 
@@ -56,18 +58,18 @@ public class UserContributionServiceTest extends ArquillianTest {
 
         p1.setUser(u);
         p2.setUser(u);
-        int size = postService.findAll().size();
+        int size = postRepository.findAll().size();
 
         userContributionService.placePost(u.getId(), p1);
         userContributionService.placePost(u.getId(), p2);
 
-        assertEquals(size + 2, postService.findAll().size());
+        assertEquals(size + 2, postRepository.findAll().size());
     }
 
     // TODO: 27/09/16  IS THIS REDUNDANT SINCE WE ARE TESTING REMOVAL IN POST SERVICE
     @Test
     public void removePost() throws Exception {
-        int size = postService.findAll().size();
+        int size = postRepository.findAll().size();
 
         User u = getPersistedUser();
         Post p1 = getValidPost();
@@ -75,19 +77,19 @@ public class UserContributionServiceTest extends ArquillianTest {
 
         Post persistedPost = userContributionService.placePost(u.getId(), p1);
 
-        assertEquals(size + 1, postService.findAll().size());
+        assertEquals(size + 1, postRepository.findAll().size());
 
-        persistedPost = postService.findById(persistedPost.getId());
-        postService.remove(persistedPost);
+        persistedPost = postRepository.findById(persistedPost.getId());
+        postRepository.remove(persistedPost);
 
-        assertEquals("post should have been removed", size, postService.findAll().size());
-        assertEquals("check on both sides", 0, postService.findByUser(u.getId()).size());
+        assertEquals("post should have been removed", size, postRepository.findAll().size());
+        assertEquals("check on both sides", 0, postRepository.findByUser(u.getId()).size());
     }
 
     // TODO: 27/09/16  IS THIS REDUNDANT SINCE WE ARE TESTING REMOVAL IN COMMENT SERVICE
     @Test
     public void placeComment() throws Exception {
-        int size = commentService.findAll().size();
+        int size = commentRepository.findAll().size();
 
         User persistedUser = getPersistedUser();
         Post persistedPost = getPersistedPost();
@@ -96,12 +98,12 @@ public class UserContributionServiceTest extends ArquillianTest {
         userContributionService.placeComment(persistedUser.getId(), persistedPost.getId(), getValidComment());
         userContributionService.placeComment(persistedUser.getId(), persistedPost.getId(), getValidComment());
 
-        assertEquals("size should increment", size + 2, commentService.findAll().size());
+        assertEquals("size should increment", size + 2, commentRepository.findAll().size());
     }
 
     @Test
     public void removeComment() throws Exception {
-        int size = commentService.findAll().size();
+        int size = commentRepository.findAll().size();
 
         User persistedUser = getPersistedUser();
         Post persistedPost = getPersistedPost();
@@ -109,12 +111,12 @@ public class UserContributionServiceTest extends ArquillianTest {
         Comment persistedComment =
                 userContributionService.placeComment(persistedUser.getId(), persistedPost.getId(), getValidComment());
 
-        assertEquals(size + 1, commentService.findAll().size());
+        assertEquals(size + 1, commentRepository.findAll().size());
 
-        persistedComment = commentService.findById(persistedComment.getId());
-        commentService.remove(persistedComment);
+        persistedComment = commentRepository.findById(persistedComment.getId());
+        commentRepository.remove(persistedComment);
 
-        assertEquals("comment should have been removed", size, commentService.findAll().size());
+        assertEquals("comment should have been removed", size, commentRepository.findAll().size());
     }
 
     ////////////////////////////////
@@ -128,12 +130,12 @@ public class UserContributionServiceTest extends ArquillianTest {
     }
 
     private User getPersistedUser() {
-        return userService.save(getValidUser());
+        return UserRepository.save(getValidUser());
     }
 
     private Post getPersistedPost() {
         Post post = new Post(getPersistedUser(), "text");
-        return postService.save(post);
+        return postRepository.save(post);
     }
 
     private Post getValidPost() {

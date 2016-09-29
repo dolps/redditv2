@@ -3,12 +3,12 @@ package com.dolplads.service;
 import com.dolplads.model.Comment;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
+import com.dolplads.repository.CommentRepository;
+import com.dolplads.repository.PostRepository;
+import com.dolplads.repository.UserRepository;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
 
 /**
  * Created by dolplads on 27/09/16.
@@ -19,31 +19,31 @@ import java.util.List;
 @Stateless
 public class UserContributionService {
     @EJB
-    private PostService postService;
+    private PostRepository postRepository;
     @EJB
-    private UserService userService;
+    private UserRepository userRepository;
     @EJB
-    private CommentService commentService;
+    private CommentRepository commentRepository;
 
     public Post placePost(Long userId, Post post) {
-        User user = userService.findById(userId);
+        User user = userRepository.findById(userId);
 
         if (user != null) {
             post.setUser(user);
-            return postService.save(post);
+            return postRepository.save(post);
         }
 
         return null;
     }
 
     public Comment placeComment(Long userId, Long postId, Comment comment) {
-        User user = userService.findById(userId);
-        Post post = postService.findById(postId);
+        User user = userRepository.findById(userId);
+        Post post = postRepository.findById(postId);
 
         if (user != null && post != null) {
             comment.setUser(user);
             comment.setPost(post);
-            return commentService.save(comment);
+            return commentRepository.save(comment);
         }
         return null;
     }

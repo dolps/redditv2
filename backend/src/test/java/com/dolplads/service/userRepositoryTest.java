@@ -21,11 +21,11 @@ import static org.junit.Assert.*;
  * Created by dolplads on 26/09/16.
  */
 @Log
-public class UserServiceTest<T> extends ArquillianTest {
+public class userRepositoryTest<T> extends ArquillianTest {
     @EJB
     private DeleterEJB deleterEJB;
     @EJB
-    private UserService userService;
+    private com.dolplads.repository.UserRepository UserRepository;
     @Inject
     private Validator validator;
 
@@ -51,53 +51,53 @@ public class UserServiceTest<T> extends ArquillianTest {
 
     @Test
     public void save() throws Exception {
-        int size = userService.findAll().size();
+        int size = UserRepository.findAll().size();
 
         User user = getValidUser();
-        user = userService.save(user);
+        user = UserRepository.save(user);
 
         assertNotNull(user.getId());
-        assertEquals(size + 1, userService.findAll().size());
+        assertEquals(size + 1, UserRepository.findAll().size());
     }
 
     @Test
     public void findById() throws Exception {
         User user = getValidUser();
-        user = userService.save(user);
+        user = UserRepository.save(user);
 
         assertNotNull(user.getId());
-        assertNotNull(userService.findById(user.getId()));
-        assertNull(userService.findById(100L));
+        assertNotNull(UserRepository.findById(user.getId()));
+        assertNull(UserRepository.findById(100L));
     }
 
     @Test
     public void remove() throws Exception {
-        int size = userService.findAll().size();
+        int size = UserRepository.findAll().size();
 
         User user = getValidUser();
-        user = userService.save(user);
+        user = UserRepository.save(user);
 
         assertNotNull(user.getId());
-        assertEquals(size + 1, userService.findAll().size());
+        assertEquals(size + 1, UserRepository.findAll().size());
 
-        userService.remove(user);
+        UserRepository.remove(user);
 
-        assertNull(userService.findById(user.getId()));
-        assertEquals(size, userService.findAll().size());
+        assertNull(UserRepository.findById(user.getId()));
+        assertEquals(size, UserRepository.findAll().size());
     }
 
     @Test
     public void update() throws Exception {
         User user = getValidUser();
-        user = userService.save(user);
+        user = UserRepository.save(user);
 
-        user = userService.findById(user.getId());
+        user = UserRepository.findById(user.getId());
         assertEquals("thomas", user.getUserName());
 
         user.setUserName("newName");
-        user = userService.update(user);
+        user = UserRepository.update(user);
 
-        user = userService.findById(user.getId());
+        user = UserRepository.findById(user.getId());
         assertEquals("newName", user.getUserName());
     }
 
@@ -106,10 +106,10 @@ public class UserServiceTest<T> extends ArquillianTest {
         User user1 = getValidUser();
         User user2 = getValidUser();
 
-        userService.save(user1);
-        userService.save(user2);
+        UserRepository.save(user1);
+        UserRepository.save(user2);
 
-        List<User> users = userService.findAll();
+        List<User> users = UserRepository.findAll();
 
         assertEquals(2, users.size());
     }
@@ -120,11 +120,11 @@ public class UserServiceTest<T> extends ArquillianTest {
         User user2 = getValidUser();
         User user3 = getValidUser();
 
-        userService.save(user1);
-        userService.save(user2);
-        userService.save(user3);
+        UserRepository.save(user1);
+        UserRepository.save(user2);
+        UserRepository.save(user3);
 
-        List<User> users = userService.findAllPaginated(1, 2);
+        List<User> users = UserRepository.findAllPaginated(1, 2);
 
         assertEquals(2, users.size());
     }

@@ -6,6 +6,8 @@ import com.dolplads.model.Address;
 import com.dolplads.model.Comment;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
+import com.dolplads.repository.CommentRepository;
+import com.dolplads.repository.PostRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
 import org.junit.Before;
@@ -26,15 +28,15 @@ import static org.junit.Assert.*;
  * Created by dolplads on 27/09/16.
  */
 @Log
-public class CommentServiceTest extends ArquillianTest {
+public class CommentRepositoryTest extends ArquillianTest {
     @EJB
     private DeleterEJB deleterEJB;
     @EJB
-    private CommentService commentService;
+    private CommentRepository commentRepository;
     @EJB
-    private PostService postService;
+    private PostRepository postRepository;
     @EJB
-    private UserService userService;
+    private com.dolplads.repository.UserRepository UserRepository;
     @Inject
     private Validator validator;
 
@@ -76,83 +78,83 @@ public class CommentServiceTest extends ArquillianTest {
         Comment comment2 = getValidComment();
         comment2.setUser(user);
 
-        commentService.save(comment1);
-        commentService.save(comment2);
+        commentRepository.save(comment1);
+        commentRepository.save(comment2);
 
-        List<Comment> comments = commentService.findByUser(user.getId());
+        List<Comment> comments = commentRepository.findByUser(user.getId());
 
         assertEquals(2, comments.size());
     }
 
     @Test
     public void save() throws Exception {
-        int size = commentService.findAll().size();
+        int size = commentRepository.findAll().size();
 
         Comment comment = getValidComment();
-        comment = commentService.save(comment);
+        comment = commentRepository.save(comment);
 
         assertNotNull(comment.getId());
-        assertEquals(size + 1, commentService.findAll().size());
+        assertEquals(size + 1, commentRepository.findAll().size());
     }
 
     @Test
     public void findById() throws Exception {
         Comment comment = getValidComment();
-        comment = commentService.save(comment);
+        comment = commentRepository.save(comment);
 
         assertNotNull(comment.getId());
-        assertNotNull(commentService.findById(comment.getId()));
-        assertNull(commentService.findById(100L));
+        assertNotNull(commentRepository.findById(comment.getId()));
+        assertNull(commentRepository.findById(100L));
     }
 
     @Test
     public void remove() throws Exception {
-        int size = commentService.findAll().size();
+        int size = commentRepository.findAll().size();
 
         Comment comment = getValidComment();
-        comment = commentService.save(comment);
+        comment = commentRepository.save(comment);
 
         assertNotNull(comment.getId());
-        assertEquals(size + 1, commentService.findAll().size());
+        assertEquals(size + 1, commentRepository.findAll().size());
 
-        commentService.remove(comment);
+        commentRepository.remove(comment);
 
-        assertNull(commentService.findById(comment.getId()));
-        assertEquals(size, commentService.findAll().size());
+        assertNull(commentRepository.findById(comment.getId()));
+        assertEquals(size, commentRepository.findAll().size());
     }
 
     @Test
     public void update() throws Exception {
         Comment comment = getValidComment();
-        commentService.save(comment);
+        commentRepository.save(comment);
 
-        comment = commentService.findById(comment.getId());
+        comment = commentRepository.findById(comment.getId());
         assertEquals("comment", comment.getText());
 
         comment.setText("updated");
-        comment = commentService.update(comment);
+        comment = commentRepository.update(comment);
 
-        comment = commentService.findById(comment.getId());
+        comment = commentRepository.findById(comment.getId());
 
         assertEquals("updated", comment.getText());
     }
 
     @Test
     public void findAll() throws Exception {
-        commentService.save(getValidComment());
-        commentService.save(getValidComment());
+        commentRepository.save(getValidComment());
+        commentRepository.save(getValidComment());
 
-        List<Comment> comments = commentService.findAll();
+        List<Comment> comments = commentRepository.findAll();
         assertEquals(2, comments.size());
     }
 
     @Test
     public void findAllPaginated() throws Exception {
-        commentService.save(getValidComment());
-        commentService.save(getValidComment());
-        commentService.save(getValidComment());
+        commentRepository.save(getValidComment());
+        commentRepository.save(getValidComment());
+        commentRepository.save(getValidComment());
 
-        List<Comment> comments = commentService.findAllPaginated(1, 2);
+        List<Comment> comments = commentRepository.findAllPaginated(1, 2);
         assertEquals(2, comments.size());
     }
 
@@ -176,11 +178,11 @@ public class CommentServiceTest extends ArquillianTest {
     }
 
     private Post getPersistedPost() {
-        return postService.save(getValidPost());
+        return postRepository.save(getValidPost());
     }
 
     private User getPersistedUser() {
-        return userService.save(getValidUser());
+        return UserRepository.save(getValidUser());
     }
 
 }

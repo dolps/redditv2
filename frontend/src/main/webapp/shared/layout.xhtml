@@ -1,43 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--suppress ALL -->
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
->
-    <!--
-        Define a default layout, where pages have common header/footer text
-    -->
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+<h:head>
+    <title><ui:insert name="title">REDDITCLONE</ui:insert></title>
+</h:head>
+<h:body>
+    <h:form>
+        <h:commandButton action="home" value="HOME"></h:commandButton>
+        <c:choose>
+            <c:when test="#{!loginController.loggedIn}">
+                <h:outputText value="LOGGED OUT"/>
+                <h:commandButton action="login" value="Login"></h:commandButton>
+            </c:when>
+            <c:otherwise>
+                <h:outputText value="LOGGED IN"/>
+                <h:commandButton action="#{loginController.logOut()}" value="Logout"></h:commandButton>
+            </c:otherwise>
+        </c:choose>
+    </h:form>
+    <br></br> <br></br>
+    <h:form>
+        <h:outputText value="See all users"/>
+        <h:commandButton action="list_users" value="List users"></h:commandButton>
+    </h:form>
+    _______________________________________________
 
-    <h:head>
-        <title>
-            <ui:insert name="title">Default title</ui:insert>
-        </title>
-    </h:head>
+    <h1>
+        <ui:insert name="title"></ui:insert>
+    </h1>
+    <ui:insert name="content">content will be filled in</ui:insert>
 
+    <p>
+        _____________________________<br></br>
+        This is a footer
+    </p>
 
-    <h:body>
-
-        <p>
-            Back to <a href="/examples">Home</a>
-        </p>
-        <hr/>
-
-
-        <h1>
-            <ui:insert name="title">Default title</ui:insert>
-        </h1>
-        <hr/>
-
-
-        <ui:insert name="content">Default content</ui:insert>
-
-        <hr/>
-
-        <p>
-            Code available at: <a href="https://github.com/arcuri82/pg5100_autumn_2016"> https://github.com/arcuri82/pg5100_autumn_2016</a>
-        </p>
-
-    </h:body>
-
+</h:body>
 </html>

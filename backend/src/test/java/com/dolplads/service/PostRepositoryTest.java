@@ -5,6 +5,7 @@ import com.dolplads.helpers.DeleterEJB;
 import com.dolplads.model.Address;
 import com.dolplads.model.Post;
 import com.dolplads.model.User;
+import com.dolplads.repository.PostRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
 import org.junit.Before;
@@ -24,14 +25,14 @@ import static org.junit.Assert.*;
  * Created by dolplads on 27/09/16.
  */
 @Log
-public class PostServiceTest extends ArquillianTest {
+public class PostRepositoryTest extends ArquillianTest {
 
     @EJB
     private DeleterEJB deleterEJB;
     @EJB
-    private PostService postService;
+    private PostRepository postRepository;
     @EJB
-    private UserService userService;
+    private com.dolplads.repository.UserRepository UserRepository;
     @Inject
     private Validator validator;
 
@@ -65,53 +66,53 @@ public class PostServiceTest extends ArquillianTest {
 
     @Test
     public void save() throws Exception {
-        int size = postService.findAll().size();
+        int size = postRepository.findAll().size();
 
         Post post = getValidPost();
-        post = postService.save(post);
+        post = postRepository.save(post);
 
         assertNotNull(post.getId());
-        assertEquals(size + 1, postService.findAll().size());
+        assertEquals(size + 1, postRepository.findAll().size());
     }
 
     @Test
     public void findById() throws Exception {
         Post post = getValidPost();
-        post = postService.save(post);
+        post = postRepository.save(post);
 
         assertNotNull(post.getId());
-        assertNotNull(postService.findById(post.getId()));
-        assertNull(postService.findById(100L));
+        assertNotNull(postRepository.findById(post.getId()));
+        assertNull(postRepository.findById(100L));
     }
 
     @Test
     public void remove() throws Exception {
-        int size = postService.findAll().size();
+        int size = postRepository.findAll().size();
 
         Post post = getValidPost();
-        post = postService.save(post);
+        post = postRepository.save(post);
 
         assertNotNull(post.getId());
-        assertEquals(size + 1, postService.findAll().size());
+        assertEquals(size + 1, postRepository.findAll().size());
 
-        postService.remove(post);
+        postRepository.remove(post);
 
-        assertNull(postService.findById(post.getId()));
-        assertEquals(size, postService.findAll().size());
+        assertNull(postRepository.findById(post.getId()));
+        assertEquals(size, postRepository.findAll().size());
     }
 
     @Test
     public void update() throws Exception {
         Post post = getValidPost();
-        post = postService.save(post);
+        post = postRepository.save(post);
 
-        post = postService.findById(post.getId());
+        post = postRepository.findById(post.getId());
         assertEquals("four", post.getText());
 
         post.setText("updated");
-        post = postService.update(post);
+        post = postRepository.update(post);
 
-        post = postService.findById(post.getId());
+        post = postRepository.findById(post.getId());
         assertEquals("updated", post.getText());
     }
 
@@ -123,14 +124,14 @@ public class PostServiceTest extends ArquillianTest {
     @Test
     public void updateUserReflectsInPost() throws Exception {
         Post post = getValidPost();
-        post = postService.save(post);
+        post = postRepository.save(post);
 
-        post = postService.findById(post.getId());
+        post = postRepository.findById(post.getId());
         User u = post.getUser();
         u.setUserName("newUserName");
-        u = userService.update(u);
+        u = UserRepository.update(u);
 
-        post = postService.findById(post.getId());
+        post = postRepository.findById(post.getId());
         assertEquals("newUserName", post.getUser().getUserName());
     }
 
@@ -139,10 +140,10 @@ public class PostServiceTest extends ArquillianTest {
         Post post1 = getValidPost();
         Post post2 = getValidPost();
 
-        postService.save(post1);
-        postService.save(post2);
+        postRepository.save(post1);
+        postRepository.save(post2);
 
-        List<Post> posts = postService.findAll();
+        List<Post> posts = postRepository.findAll();
         assertEquals(2, posts.size());
     }
 
@@ -152,11 +153,11 @@ public class PostServiceTest extends ArquillianTest {
         Post post2 = getValidPost();
         Post post3 = getValidPost();
 
-        postService.save(post1);
-        postService.save(post2);
-        postService.save(post3);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
 
-        List<Post> posts = postService.findAllPaginated(1, 2);
+        List<Post> posts = postRepository.findAllPaginated(1, 2);
 
         assertEquals(2, posts.size());
     }
@@ -169,10 +170,10 @@ public class PostServiceTest extends ArquillianTest {
 
         post1.setUser(user);
         post2.setUser(user);
-        postService.save(post1);
-        postService.save(post2);
+        postRepository.save(post1);
+        postRepository.save(post2);
 
-        List<Post> posts = postService.findByUser(user.getId());
+        List<Post> posts = postRepository.findByUser(user.getId());
         assertEquals(2, posts.size());
     }
 
@@ -187,7 +188,7 @@ public class PostServiceTest extends ArquillianTest {
     }
 
     private User getPersistedUser() {
-        return userService.save(getValidUser());
+        return UserRepository.save(getValidUser());
     }
 
     private Post getValidPost() {
