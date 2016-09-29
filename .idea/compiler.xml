@@ -24,12 +24,15 @@
         <processorPath useClasspath="true" />
         <module name="backend" />
         <module name="frontend" />
+        <module name="report" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="backend" target="1.8" />
       <module name="frontend" target="1.8" />
+      <module name="jacoco" target="1.5" />
       <module name="redditV2" target="1.5" />
+      <module name="report" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
